@@ -3,7 +3,7 @@ import adoptedPet from "./adoptedPetSlice";
 
 const store = configureStore({
     reducer: {
-        adoptedPet
+        adoptedPet,
     }
 })
 
