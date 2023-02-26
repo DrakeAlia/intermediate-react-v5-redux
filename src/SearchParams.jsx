@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useSearchQuery } from "./petApiService";
 import Results from "./Results";
 import useBreedList from "./useBreedList";
-import fetchSearch from "./fetchSearch";
 import { all } from "./searchParamsSlice";
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
+// This is a functional component that we're going to use to render the search form
+// We're going to use the useSelector hook to pull out the adoptedPet and searchParams
+// from the store
 const SearchParams = () => {
   // Make sure that you're only pulling out the bare minimum amount of data that you absolutely need for this 
   // particular component. Do NOT pull out unnecessary data
@@ -15,9 +17,12 @@ const SearchParams = () => {
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
   const dispatch = useDispatch();
-
-  const results = useQuery(["search", searchParams], fetchSearch);
-  const pets = results?.data?.pets ?? [];
+  // We're using the useSearchQuery hook from the petApiService.js file
+  // redux is going to automatically call this hook for us
+  let {data: pets } = useSearchQuery(searchParams)
+  // If the data is still loading, we're going to show a loading pane
+  // If the data is not loading, we're going to show the results
+  pets = pets ?? []
 
   return (
     <div className="search-params">
